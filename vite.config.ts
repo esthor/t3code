@@ -10,6 +10,11 @@ const RESTRICTED_IMPORT_PATHS = [
       "Import from an explicit @t3tools/client-runtime/* subpath. The package has no root export.",
   },
   {
+    name: "effect",
+    message:
+      'Import Effect modules as namespaces from their subpaths, like import * as Effect from "effect/Effect".',
+  },
+  {
     name: "@pierre/diffs/react",
     importNames: ["CodeView"],
     message: "Use StyledDiffCodeView so web diff surfaces share styling and virtualized geometry.",

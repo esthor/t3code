@@ -472,7 +472,7 @@ The codebase already uses `Effect.fn("name")` heavily. That should usually be yo
 For ad hoc work:
 
 ```ts
-import { Effect } from "effect";
+import * as Effect from "effect/Effect";
 
 const runThing = Effect.gen(function* () {
   yield* Effect.annotateCurrentSpan({
