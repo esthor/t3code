@@ -14,42 +14,51 @@ const approvability = `Fail when a maintainer should read this pull request befo
 Otherwise pass. A focused bug fix, copy or layout fix, revert, or docs-only or test-only change passes unless a rule above applies. If you cannot decide, fail rather than report inconclusive. When failing, say that the pull request needs a maintainer's review.
 `;
 
-export default defineConfig({
-  reviews: {
-    high_level_summary: false,
-    review_status: false,
-    // Request changes until CodeRabbit's comments are resolved and checks pass, then approve.
-    request_changes_workflow: true,
-    allow_author_approval: false,
-    auto_review: {
-      enabled: true,
-    },
-    pre_merge_checks: {
-      override_requested_reviewers_only: true,
-      custom_checks: [{ name: "Approvability", mode: "error", instructions: approvability }],
-    },
-    path_filters: [
-      // Vendored read-only reference checkouts of upstream Effect and Alchemy
-      // (see scripts/lib/reference-repos.ts). Nothing imports from them.
-      "!.repos/**",
-    ],
-    path_instructions: [
-      {
-        path: "{apps,packages,infra}/**/*.ts",
-        instructions: "Hold changed code to the rules in docs/internals/effect-services.md.",
+// Org members and collaborators merge their own pull requests. CodeRabbit gates
+// everyone else's, where its approval tells maintainers what is safe to merge.
+const UNGATED_AUTHORS = new Set(["OWNER", "MEMBER", "COLLABORATOR"]);
+
+export default defineConfig((ctx) => {
+  const gated = !UNGATED_AUTHORS.has(ctx.pr?.authorAssociation ?? "");
+  return {
+    reviews: {
+      high_level_summary: false,
+      review_status: false,
+      // Request changes until CodeRabbit's comments are resolved and checks pass, then approve.
+      request_changes_workflow: gated,
+      allow_author_approval: false,
+      auto_review: {
+        enabled: true,
       },
-      {
-        path: "apps/web/src/**/*.{tsx,css}",
-        instructions: "Hold changed code to the rules in docs/internals/web-ui.md.",
+      pre_merge_checks: {
+        override_requested_reviewers_only: true,
+        custom_checks: [
+          { name: "Approvability", mode: gated ? "error" : "off", instructions: approvability },
+        ],
       },
-    ],
-  },
-  knowledge_base: {
-    code_guidelines: {
-      filePatterns: [
-        { files: "docs/internals/effect-services.md", applyTo: "{apps,packages,infra}/**/*.ts" },
-        { files: "docs/internals/web-ui.md", applyTo: "apps/web/src/**/*.{tsx,css}" },
+      path_filters: [
+        // Vendored read-only reference checkouts of upstream Effect and Alchemy
+        // (see scripts/lib/reference-repos.ts). Nothing imports from them.
+        "!.repos/**",
+      ],
+      path_instructions: [
+        {
+          path: "{apps,packages,infra}/**/*.ts",
+          instructions: "Hold changed code to the rules in docs/internals/effect-services.md.",
+        },
+        {
+          path: "apps/web/src/**/*.{tsx,css}",
+          instructions: "Hold changed code to the rules in docs/internals/web-ui.md.",
+        },
       ],
     },
-  },
+    knowledge_base: {
+      code_guidelines: {
+        filePatterns: [
+          { files: "docs/internals/effect-services.md", applyTo: "{apps,packages,infra}/**/*.ts" },
+          { files: "docs/internals/web-ui.md", applyTo: "apps/web/src/**/*.{tsx,css}" },
+        ],
+      },
+    },
+  };
 });
