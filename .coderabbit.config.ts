@@ -18,8 +18,25 @@ Otherwise pass. A focused bug fix, copy or layout fix, revert, or docs-only or t
 // everyone else's, where its approval tells maintainers what is safe to merge.
 const UNGATED_AUTHORS = new Set(["OWNER", "MEMBER", "COLLABORATOR"]);
 
+// Paths that alone meet an Approvability rule. Naming them to the check keeps
+// these rules from depending on its judgment.
+const MAINTAINER_PATHS = [
+  [
+    "CI, agent, or review configuration",
+    /^\.(github|vite-hooks|agents|claude|cursor)\/|^\.coderabbit\.config\.ts$|(^|\/)(AGENTS|CLAUDE|CONTRIBUTING)\.md$/,
+  ],
+  ["dependencies", /^(pnpm-lock\.yaml|pnpm-workspace\.yaml|patches\/)/],
+] as const;
+
 export default defineConfig((ctx) => {
   const gated = !UNGATED_AUTHORS.has(ctx.pr?.authorAssociation ?? "");
+  const changed = ctx.pr?.changedFiles?.status === "resolved" ? ctx.pr.changedFiles.paths : [];
+  const pathRules = MAINTAINER_PATHS.flatMap(([rule, pattern]) => {
+    const paths = changed.filter((path) => pattern.test(path));
+    if (paths.length === 0) return [];
+    const shown = paths.length > 5 ? [...paths.slice(0, 5), `and ${paths.length - 5} more`] : paths;
+    return [`- ${rule}: ${shown.join(", ")}`];
+  });
   return {
     reviews: {
       high_level_summary: false,
@@ -33,7 +50,14 @@ export default defineConfig((ctx) => {
       pre_merge_checks: {
         override_requested_reviewers_only: true,
         custom_checks: [
-          { name: "Approvability", mode: gated ? "error" : "off", instructions: approvability },
+          {
+            name: "Approvability",
+            mode: gated ? "error" : "off",
+            instructions:
+              pathRules.length === 0
+                ? approvability
+                : `${approvability}\nThese changed files meet a rule on their own, so fail and name them:\n${pathRules.join("\n")}\n`,
+          },
         ],
       },
       path_filters: [
