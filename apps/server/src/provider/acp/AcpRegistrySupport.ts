@@ -37,6 +37,7 @@ import * as Ref from "effect/Ref";
 import * as Schema from "effect/Schema";
 import * as Semaphore from "effect/Semaphore";
 import * as Stream from "effect/Stream";
+import { sha256 } from "@noble/hashes/sha2";
 import { HttpClient, HttpClientRequest, HttpClientResponse } from "effect/http";
 import { ChildProcess, ChildProcessSpawner } from "effect/process";
 
@@ -1412,6 +1413,9 @@ export const makeAcpRegistryCatalog = Effect.fn("AcpRegistryCatalog.make")(funct
             ),
         }),
       );
+      // Hash while streaming: archives can be up to MAX_ARCHIVE_BYTES, and
+      // Effect's Crypto only digests a whole buffer.
+      const hash = sha256.create();
       let downloadedBytes = 0;
       yield* response.stream.pipe(
         Stream.tap((chunk) => {
@@ -1424,6 +1428,7 @@ export const makeAcpRegistryCatalog = Effect.fn("AcpRegistryCatalog.make")(funct
             );
           }
           downloadedBytes += chunk.byteLength;
+          hash.update(chunk);
           return Effect.void;
         }),
         Stream.run(fileSystem.sink(archivePath)),
@@ -1448,17 +1453,7 @@ export const makeAcpRegistryCatalog = Effect.fn("AcpRegistryCatalog.make")(funct
         }),
       );
       if (target.sha256 !== undefined) {
-        const actual = yield* fileSystem.readFile(archivePath).pipe(
-          Effect.mapError(
-            (cause) =>
-              new AcpRegistryError({
-                reason: "download_failed",
-                detail: `Could not read ACP Registry agent ${agent.id} ${agent.version} download.`,
-                cause,
-              }),
-          ),
-          Effect.flatMap(sha256Hex),
-        );
+        const actual = Hex.encode(hash.digest());
         if (actual !== target.sha256.toLowerCase()) {
           return yield* new AcpRegistryError({
             reason: "checksum_mismatch",
