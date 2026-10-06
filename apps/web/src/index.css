@@ -2278,3 +2278,7 @@ code {
     }
   }
 }
+
+.dark .composer-quota-notice-text {
+  color: rgb(253 230 138);
+}
