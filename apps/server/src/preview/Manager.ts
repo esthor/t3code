@@ -31,6 +31,7 @@ import {
   newPreviewTabId,
   normalizePreviewUrl,
 } from "@t3tools/shared/preview";
+// @effect-diagnostics-next-line nodeBuiltinImport:off -- uses a synchronous UUID; Effect's Crypto.randomUUIDv4 is an Effect.
 import * as NodeCrypto from "node:crypto";
 import * as Context from "effect/Context";
 import * as DateTime from "effect/DateTime";

@@ -1,3 +1,4 @@
+// @effect-diagnostics-next-line nodeBuiltinImport:off -- Effect's Crypto has no createHash.
 import * as NodeCrypto from "node:crypto";
 import * as Effect from "effect/Effect";
 import * as ServerSecretStore from "../auth/ServerSecretStore.ts";

@@ -12,6 +12,7 @@ import * as Path from "effect/Path";
 import * as Stream from "effect/Stream";
 import * as TestClock from "effect/testing/TestClock";
 import { HttpClient, HttpClientResponse } from "effect/http";
+// @effect-diagnostics-next-line nodeBuiltinImport:off -- Effect's Crypto has no createHash.
 import * as NodeCrypto from "node:crypto";
 import * as NodeZlib from "node:zlib";
 
