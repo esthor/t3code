@@ -24,13 +24,13 @@ export default defineConfig((ctx) => ({
     high_level_summary: false,
     review_status: false,
     request_changes_workflow: isGated(ctx),
-    allow_author_approval: false,
+    allow_author_approval: !isGated(ctx),
     auto_review: {
       enabled: true,
     },
     pre_merge_checks: {
       docstrings: { mode: "off" },
-      override_requested_reviewers_only: true,
+      override_requested_reviewers_only: isGated(ctx),
       custom_checks: [
         {
           name: "Approvability",
