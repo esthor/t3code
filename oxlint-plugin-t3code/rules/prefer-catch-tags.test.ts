@@ -25,6 +25,18 @@ describe("t3code/prefer-catch-tags", () => {
     `,
   );
 
+  rule.valid(
+    "ignores a local that shadows the namespace",
+    `
+      import * as Effect from "effect/Effect";
+
+      export const program = Effect.void;
+      export function recover(Effect: { catchTag: (tag: string) => void }) {
+        Effect.catchTag("A");
+      }
+    `,
+  );
+
   rule.invalid(
     "reports Effect.catchTag",
     `
