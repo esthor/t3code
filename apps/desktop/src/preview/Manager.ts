@@ -5,8 +5,6 @@
  * elements live in the renderer; we only attach listeners and forward state
  * here). Single layer-scoped browser session partition.
  */
-// @effect-diagnostics-next-line nodeBuiltinImport:off -- uses Node's synchronous randomUUID; Effect's Crypto.randomUUIDv4 is an Effect.
-import * as NodeCrypto from "node:crypto";
 import {
   DesktopPreviewRecordingInputSchema,
   DESKTOP_PREVIEW_RECORDING_CAPTURE_TRIGGER,
@@ -50,6 +48,7 @@ import {
 import * as Cause from "effect/Cause";
 import * as Clock from "effect/Clock";
 import * as Context from "effect/Context";
+import * as Crypto from "effect/Crypto";
 import * as DateTime from "effect/DateTime";
 import * as Deferred from "effect/Deferred";
 import * as Effect from "effect/Effect";
@@ -644,6 +643,7 @@ const makeNativeOperations = Effect.fn("PreviewManager.makeOperations")(function
   const rendererHistory = yield* DesktopRendererHistory.DesktopRendererHistory;
   const hostPlatform = yield* HostProcessPlatform;
   const path = yield* Path.Path;
+  const crypto = yield* Crypto.Crypto;
   const parentScope = yield* Scope.Scope;
   const context = yield* Effect.context<never>();
   const runFork = Effect.runForkWith(context);
@@ -1658,9 +1658,9 @@ const makeNativeOperations = Effect.fn("PreviewManager.makeOperations")(function
     returnByValue: boolean,
     awaitPromise = true,
   ): Effect.Effect<A, PreviewManagerError> =>
-    Effect.suspend(() => {
-      const objectGroup = `t3-evaluation-${NodeCrypto.randomUUID()}`;
-      return send("Runtime.evaluate", {
+    Effect.gen(function* () {
+      const objectGroup = `t3-evaluation-${yield* crypto.randomUUIDv4.pipe(Effect.orDie)}`;
+      return yield* send("Runtime.evaluate", {
         expression,
         awaitPromise,
         returnByValue,
@@ -4187,10 +4187,11 @@ const makeNativeOperations = Effect.fn("PreviewManager.makeOperations")(function
     const context = { operation: "automationPress.awaitNativeKey", tabId, webContentsId: wc.id };
     const evaluate = (frame: Electron.WebFrameMain, expression: string) =>
       attemptPromise(context, () => frame.executeJavaScript(expression));
+    const receiptId = yield* crypto.randomUUIDv4.pipe(Effect.orDie);
     const { frames, receiptKey } = yield* Effect.acquireRelease(
       attempt(context, () => ({
         frames: wc.mainFrame.framesInSubtree,
-        receiptKey: JSON.stringify(`__t3NativeKey_${NodeCrypto.randomUUID()}`),
+        receiptKey: JSON.stringify(`__t3NativeKey_${receiptId}`),
       })),
       ({ frames, receiptKey }) =>
         Effect.forEach(
@@ -4446,10 +4447,8 @@ const makeNativeOperations = Effect.fn("PreviewManager.makeOperations")(function
           keySequence,
           clipboardData,
         );
-        const selectionKey = yield* encodeJson(
-          context,
-          `__t3EditingSelection_${NodeCrypto.randomUUID()}`,
-        );
+        const selectionId = yield* crypto.randomUUIDv4.pipe(Effect.orDie);
+        const selectionKey = yield* encodeJson(context, `__t3EditingSelection_${selectionId}`);
         // Editing requires an active document. Preserve the target
         // and selection across focus handlers without focusing the desktop.
         yield* Effect.acquireUseRelease(

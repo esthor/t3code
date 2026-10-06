@@ -1,12 +1,10 @@
-// @effect-diagnostics-next-line nodeBuiltinImport:off -- uses Node's synchronous randomUUID; Effect's Crypto.randomUUIDv4 is an Effect.
-import * as NodeCrypto from "node:crypto";
-
 import {
   ATTACHMENT_UPLOAD_URL_TTL_MS,
   type AttachmentCreateUploadUrlInput,
   AttachmentUploadSigningKeyError,
 } from "@t3tools/contracts";
 import * as Clock from "effect/Clock";
+import * as Crypto from "effect/Crypto";
 import * as Effect from "effect/Effect";
 import * as FileSystem from "effect/FileSystem";
 import * as Option from "effect/Option";
@@ -171,9 +169,11 @@ export const storeAttachmentUpload = Effect.fn("AttachmentUpload.store")(functio
     attachmentsDir: config.attachmentsDir,
     relativePath,
   });
+  const crypto = yield* Crypto.Crypto;
+  const partId = yield* crypto.randomUUIDv4.pipe(Effect.orDie);
   const partPath = resolveAttachmentRelativePath({
     attachmentsDir: config.attachmentsDir,
-    relativePath: `${relativePath}.${NodeCrypto.randomUUID()}.part`,
+    relativePath: `${relativePath}.${partId}.part`,
   });
   if (!finalPath || !partPath) {
     return { ok: false, status: 500, detail: "Failed to resolve attachment path." };
