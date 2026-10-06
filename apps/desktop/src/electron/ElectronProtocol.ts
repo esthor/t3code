@@ -279,7 +279,9 @@ export const make = Effect.gen(function* () {
               // Reject with net.fetch's own error, as an unproxied fetch would.
               return runPromise(
                 proxyRequest(request, input.targetOrigin, contentSecurityPolicy).pipe(
-                  Effect.catchTag("ElectronProtocolFetchError", (error) => Effect.die(error.cause)),
+                  Effect.catchTags({
+                    ElectronProtocolFetchError: (error) => Effect.die(error.cause),
+                  }),
                 ),
               );
             });
