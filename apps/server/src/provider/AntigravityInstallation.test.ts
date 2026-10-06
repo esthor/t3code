@@ -21,7 +21,7 @@ import * as Sink from "effect/Sink";
 import * as Stream from "effect/Stream";
 import { HttpClient, HttpClientResponse } from "effect/http";
 import * as ChildProcessSpawner from "effect/process/ChildProcessSpawner";
-// @effect-diagnostics-next-line nodeBuiltinImport:off -- Effect's Crypto has no createHash.
+// @effect-diagnostics-next-line nodeBuiltinImport:off -- uses Node's synchronous createHash; Effect's Crypto.digest is an Effect.
 import * as NodeCrypto from "node:crypto";
 
 import * as AntigravityInstallation from "./AntigravityInstallation.ts";

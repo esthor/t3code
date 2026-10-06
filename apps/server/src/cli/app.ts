@@ -1,5 +1,5 @@
 // @effect-diagnostics globalTimers:off -- The Node socket client owns its response deadline and clears it on every completion path.
-// @effect-diagnostics-next-line nodeBuiltinImport:off -- uses a synchronous UUID; Effect's Crypto.randomUUIDv4 is an Effect.
+// @effect-diagnostics-next-line nodeBuiltinImport:off -- uses Node's synchronous randomUUID; Effect's Crypto.randomUUIDv4 is an Effect.
 import * as NodeCrypto from "node:crypto";
 import * as NodeNet from "node:net";
 import * as NodeOS from "node:os";

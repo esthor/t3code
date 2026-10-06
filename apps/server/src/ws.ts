@@ -1,7 +1,7 @@
 import { OrchestrationDispatchCommandError } from "@t3tools/contracts";
 import * as Crypto from "effect/Crypto";
 import * as Orchestrator from "./orchestration-v2/Orchestrator.ts";
-// @effect-diagnostics-next-line nodeBuiltinImport:off -- uses a synchronous UUID; Effect's Crypto.randomUUIDv4 is an Effect.
+// @effect-diagnostics-next-line nodeBuiltinImport:off -- uses Node's synchronous randomUUID; Effect's Crypto.randomUUIDv4 is an Effect.
 import * as NodeCrypto from "node:crypto";
 
 import * as DateTime from "effect/DateTime";

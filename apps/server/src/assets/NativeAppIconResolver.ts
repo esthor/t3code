@@ -1,4 +1,4 @@
-// @effect-diagnostics-next-line nodeBuiltinImport:off -- Effect's Crypto has no createHash.
+// @effect-diagnostics-next-line nodeBuiltinImport:off -- uses Node's synchronous createHash and randomUUID; Effect's Crypto has digest and randomUUIDv4 as Effects.
 import * as NodeCrypto from "node:crypto";
 import type { ToolActivityNativeAppReference } from "@t3tools/contracts";
 import * as Cache from "effect/Cache";

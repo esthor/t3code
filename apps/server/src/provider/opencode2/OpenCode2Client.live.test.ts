@@ -21,7 +21,7 @@ import * as Path from "effect/Path";
 import * as Stream from "effect/Stream";
 import { FetchHttpClient } from "effect/http";
 import { ChildProcess, ChildProcessSpawner } from "effect/process";
-// @effect-diagnostics-next-line nodeBuiltinImport:off -- Effect's Crypto has no randomBytes.
+// @effect-diagnostics-next-line nodeBuiltinImport:off -- uses Node's synchronous randomBytes; Effect's Crypto.randomBytes is an Effect.
 import * as NodeCrypto from "node:crypto";
 import { describe } from "vite-plus/test";
 

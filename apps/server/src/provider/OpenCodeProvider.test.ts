@@ -1,5 +1,5 @@
 import * as NodeAssert from "node:assert/strict";
-// @effect-diagnostics-next-line nodeBuiltinImport:off -- Effect's Crypto has no createHash.
+// @effect-diagnostics-next-line nodeBuiltinImport:off -- uses Node's synchronous createHash; Effect's Crypto.digest is an Effect.
 import * as NodeCrypto from "node:crypto";
 
 import * as NodeServices from "@effect/platform-node/NodeServices";

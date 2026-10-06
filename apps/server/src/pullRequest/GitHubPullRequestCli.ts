@@ -4,7 +4,7 @@ import { runGitHubStackAction, type GitHubStackActionError } from "./githubStack
 import * as Cause from "effect/Cause";
 import * as Context from "effect/Context";
 import * as Clock from "effect/Clock";
-// @effect-diagnostics-next-line nodeBuiltinImport:off -- Effect's Crypto has no createHash.
+// @effect-diagnostics-next-line nodeBuiltinImport:off -- uses Node's synchronous createHash; Effect's Crypto.digest is an Effect.
 import * as NodeCrypto from "node:crypto";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";

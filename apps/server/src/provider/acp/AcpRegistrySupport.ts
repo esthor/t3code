@@ -37,7 +37,7 @@ import * as Semaphore from "effect/Semaphore";
 import * as Stream from "effect/Stream";
 import { HttpClient, HttpClientRequest, HttpClientResponse } from "effect/http";
 import { ChildProcess, ChildProcessSpawner } from "effect/process";
-// @effect-diagnostics-next-line nodeBuiltinImport:off -- Effect's Crypto has no createHash.
+// @effect-diagnostics-next-line nodeBuiltinImport:off -- uses Node's synchronous createHash and randomUUID; Effect's Crypto has digest and randomUUIDv4 as Effects.
 import * as NodeCrypto from "node:crypto";
 
 import { collectUint8StreamText } from "../../stream/collectUint8StreamText.ts";

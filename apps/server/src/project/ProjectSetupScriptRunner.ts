@@ -5,7 +5,7 @@ import {
   resolveProjectScripts,
   setupProjectScript,
 } from "@t3tools/shared/projectScripts";
-// @effect-diagnostics-next-line nodeBuiltinImport:off -- uses a synchronous UUID; Effect's Crypto.randomUUIDv4 is an Effect.
+// @effect-diagnostics-next-line nodeBuiltinImport:off -- uses Node's synchronous randomUUID; Effect's Crypto.randomUUIDv4 is an Effect.
 import * as NodeCrypto from "node:crypto";
 
 import * as Clock from "effect/Clock";
