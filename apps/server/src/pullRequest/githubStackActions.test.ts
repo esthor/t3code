@@ -79,7 +79,6 @@ function fake(responses: readonly unknown[]) {
       if (value === undefined) throw new Error("Unexpected GitHub request");
       return {
         exitCode: ChildProcessSpawner.ExitCode(0),
-        // @effect-diagnostics-next-line preferSchemaOverJson:off
         stdout: JSON.stringify(value),
         stderr: "",
         stdoutTruncated: false,

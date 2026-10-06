@@ -479,7 +479,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
       mockedExecute.mockReturnValueOnce(
         Effect.succeed(
           output(
-            // @effect-diagnostics-next-line preferSchemaOverJson:off
             JSON.stringify({
               data: { s0: { pullRequest: node(7) }, s1: { pullRequest: node(8) } },
             }),
@@ -548,7 +547,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
       mockedExecute.mockReturnValueOnce(
         Effect.succeed(
           output(
-            // @effect-diagnostics-next-line preferSchemaOverJson:off
             JSON.stringify({
               data: { w0: { pullRequest: node(1) }, w1: { pullRequest: null } },
             }),
@@ -588,7 +586,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
         .mockReturnValueOnce(
           Effect.succeed(
             output(
-              // @effect-diagnostics-next-line preferSchemaOverJson:off
               JSON.stringify({
                 number: 7,
                 title: "Reuse the summary",
@@ -648,7 +645,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
       mockedExecute.mockReturnValueOnce(
         Effect.succeed(
           output(
-            // @effect-diagnostics-next-line preferSchemaOverJson:off
             JSON.stringify([
               {
                 id: 42,
@@ -707,12 +703,10 @@ layer("GitHubPullRequestCli.layer", (it) => {
           { number: 7, head: { ref: "feat/two", sha: "abc123" }, state: "open", merged_at: null },
         ],
       };
-      // @effect-diagnostics-next-line preferSchemaOverJson:off
       mockedExecute.mockReturnValueOnce(Effect.succeed(output(JSON.stringify([minimal]))));
       mockedExecute.mockReturnValueOnce(
         Effect.succeed(
           output(
-            // @effect-diagnostics-next-line preferSchemaOverJson:off
             JSON.stringify({
               ...minimal,
               pull_requests: [{ ...minimal.pull_requests[0], title: "Second layer", draft: false }],
@@ -2117,7 +2111,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
       mockedExecute.mockReturnValueOnce(
         Effect.succeed(
           output(
-            // @effect-diagnostics-next-line preferSchemaOverJson:off - canned gh GraphQL response.
             JSON.stringify({
               data: { repository: { pullRequest: { id: "PR_7" } } },
             }),
@@ -2206,7 +2199,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
         ),
       );
       const heads = output(
-        // @effect-diagnostics-next-line preferSchemaOverJson:off - canned gh response.
         JSON.stringify([
           {
             number: 7,
@@ -2217,7 +2209,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
         ]),
       );
       const runs = output(
-        // @effect-diagnostics-next-line preferSchemaOverJson:off - canned gh response.
         JSON.stringify([
           { databaseId: 10, workflowName: "build", url: "https://example.com/10" },
           { databaseId: 11, workflowName: "test", url: "https://example.com/11" },
@@ -2331,14 +2322,7 @@ layer("GitHubPullRequestCli.layer", (it) => {
         [{ databaseId: 10, workflowName: "build", url: "https://example.com/10" }],
         coreResponse({ ...detail, headRefOid: "def456" }),
       ]) {
-        mockedExecute.mockReturnValueOnce(
-          Effect.succeed(
-            output(
-              // @effect-diagnostics-next-line preferSchemaOverJson:off - canned gh response.
-              JSON.stringify(value),
-            ),
-          ),
-        );
+        mockedExecute.mockReturnValueOnce(Effect.succeed(output(JSON.stringify(value))));
       }
       const cli = yield* GitHubPullRequestCli.GitHubPullRequestCli;
 
@@ -2404,7 +2388,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
       mockedExecute.mockReturnValueOnce(
         Effect.succeed(
           output(
-            // @effect-diagnostics-next-line preferSchemaOverJson:off - canned gh response.
             JSON.stringify(
               [7, 8].map((number) => ({
                 number,
@@ -2490,7 +2473,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
       mockedExecute.mockReturnValueOnce(
         Effect.succeed(
           output(
-            // @effect-diagnostics-next-line preferSchemaOverJson:off - canned gh response.
             JSON.stringify([
               {
                 number: 7,
@@ -2505,7 +2487,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
       mockedExecute.mockReturnValueOnce(
         Effect.succeed(
           output(
-            // @effect-diagnostics-next-line preferSchemaOverJson:off - canned gh response.
             JSON.stringify(Array.from({ length: 1_001 }, (_, id) => ({ databaseId: id + 1 }))),
           ),
         ),
@@ -2615,7 +2596,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
       mockedExecute.mockReturnValueOnce(
         Effect.succeed(
           output(
-            // @effect-diagnostics-next-line preferSchemaOverJson:off
             JSON.stringify({
               data: {
                 repository: { pullRequest: { reviewThreads: { totalCount: 0, nodes: [] } } },
@@ -2996,7 +2976,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
       mockedExecute.mockReturnValueOnce(
         Effect.succeed(
           output(
-            // @effect-diagnostics-next-line preferSchemaOverJson:off
             JSON.stringify({
               data: {
                 nodes: [{ login: "octocat", avatarUrl: "https://avatars/octocat" }],
@@ -3131,7 +3110,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
       ]);
       // One request, so nothing is on the pull request until the verdict is.
       assert.strictEqual(mockedExecute.mock.calls.length, 1);
-      // @effect-diagnostics-next-line preferSchemaOverJson:off
       expect(JSON.parse(callAt(0).stdin ?? "")).toEqual({
         event: "APPROVE",
         body: "Looks right.",
@@ -3162,7 +3140,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
         "--input",
         "-",
       ]);
-      // @effect-diagnostics-next-line preferSchemaOverJson:off
       const request = JSON.parse(callAt(0).stdin ?? "") as {
         query: string;
         variables: Record<string, string>;
@@ -3206,7 +3183,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
       mockedExecute.mockReturnValueOnce(
         Effect.succeed(
           output(
-            // @effect-diagnostics-next-line preferSchemaOverJson:off
             JSON.stringify({
               data: {
                 repository: { pullRequest: { id: "PR_kwDOA" } },
@@ -3235,7 +3211,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
       expect(scopeCheck).toContain("name=web");
       expect(scopeCheck).toContain("number=7");
       expect(scopeCheck).toContain("subjectId=IC_1");
-      // @effect-diagnostics-next-line preferSchemaOverJson:off
       const request = JSON.parse(callAt(1).stdin ?? "") as {
         query: string;
         variables: Record<string, string>;
@@ -3250,7 +3225,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
       mockedExecute.mockReturnValueOnce(
         Effect.succeed(
           output(
-            // @effect-diagnostics-next-line preferSchemaOverJson:off
             JSON.stringify({
               data: {
                 repository: { pullRequest: { id: "PR_thisOne" } },
@@ -3286,10 +3260,7 @@ layer("GitHubPullRequestCli.layer", (it) => {
     Effect.gen(function* () {
       mockedExecute.mockReturnValueOnce(
         Effect.succeed(
-          output(
-            // @effect-diagnostics-next-line preferSchemaOverJson:off
-            JSON.stringify({ data: { repository: { pullRequest: { id: "PR_kwDOA" } } } }),
-          ),
+          output(JSON.stringify({ data: { repository: { pullRequest: { id: "PR_kwDOA" } } } })),
         ),
       );
       mockedExecute.mockReturnValueOnce(Effect.succeed(output("{}")));
@@ -3310,7 +3281,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
       expect(lookup).toContain("owner=acme");
       expect(lookup).toContain("name=web");
       expect(lookup).toContain("number=21");
-      // @effect-diagnostics-next-line preferSchemaOverJson:off
       const request = JSON.parse(callAt(1).stdin ?? "") as {
         query: string;
         variables: Record<string, string>;
@@ -3325,7 +3295,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
       mockedExecute.mockReturnValueOnce(
         Effect.succeed(
           output(
-            // @effect-diagnostics-next-line preferSchemaOverJson:off
             JSON.stringify({
               data: {
                 repository: { pullRequest: { id: "PR_kwDOA" } },
@@ -3348,7 +3317,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
         reacted: false,
       });
 
-      // @effect-diagnostics-next-line preferSchemaOverJson:off
       const request = JSON.parse(callAt(1).stdin ?? "") as { query: string };
       expect(request.query).toContain("removeReaction(");
     }),
@@ -3358,10 +3326,7 @@ layer("GitHubPullRequestCli.layer", (it) => {
     Effect.gen(function* () {
       mockedExecute.mockReturnValue(
         Effect.succeed(
-          output(
-            // @effect-diagnostics-next-line preferSchemaOverJson:off
-            JSON.stringify({ data: { repository: { pullRequest: { id: "PR_kwDOA" } } } }),
-          ),
+          output(JSON.stringify({ data: { repository: { pullRequest: { id: "PR_kwDOA" } } } })),
         ),
       );
       const cli = yield* GitHubPullRequestCli.GitHubPullRequestCli;
@@ -3401,7 +3366,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
       mockedExecute.mockReturnValue(
         Effect.succeed(
           output(
-            // @effect-diagnostics-next-line preferSchemaOverJson:off
             JSON.stringify({
               data: {
                 repository: { pullRequest: { id: "PR_kwDOA" } },
@@ -3444,7 +3408,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
       mockedExecute.mockReturnValueOnce(
         Effect.succeed(
           output(
-            // @effect-diagnostics-next-line preferSchemaOverJson:off
             JSON.stringify({
               data: {
                 repository: { pullRequest: { id: "PR_thisOne" } },
@@ -3518,7 +3481,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
       mockedExecute.mockReturnValueOnce(
         Effect.succeed(
           output(
-            // @effect-diagnostics-next-line preferSchemaOverJson:off
             JSON.stringify({
               author: { login: "octocat" },
               comments: [],
@@ -3937,7 +3899,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
         mockedExecute.mockReturnValue(
           Effect.succeed(
             output(
-              // @effect-diagnostics-next-line preferSchemaOverJson:off
               JSON.stringify({
                 data: {
                   repository: {
@@ -3982,7 +3943,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
       mockedExecute.mockReturnValue(
         Effect.succeed(
           output(
-            // @effect-diagnostics-next-line preferSchemaOverJson:off
             JSON.stringify({
               data: {
                 repository: {
@@ -4034,7 +3994,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
       mockedExecute.mockReturnValue(
         Effect.succeed(
           output(
-            // @effect-diagnostics-next-line preferSchemaOverJson:off
             JSON.stringify({
               data: {
                 repository: {
@@ -4083,7 +4042,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
         .mockReturnValueOnce(
           Effect.succeed(
             output(
-              // @effect-diagnostics-next-line preferSchemaOverJson:off
               JSON.stringify({
                 data: {
                   repository: {
@@ -4106,7 +4064,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
         .mockReturnValueOnce(
           Effect.succeed(
             output(
-              // @effect-diagnostics-next-line preferSchemaOverJson:off
               JSON.stringify({
                 data: {
                   repository: {
@@ -4178,7 +4135,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
         "--input",
         "-",
       ]);
-      // @effect-diagnostics-next-line preferSchemaOverJson:off
       expect(JSON.parse(call.stdin ?? "")).toEqual({
         reviewers: ["octocat"],
         team_reviewers: ["reviewers"],
@@ -4203,7 +4159,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
       const call = callAt(0);
       expect(call.args).toContain("DELETE");
       expect(call.args).toContain("repos/acme/web/pulls/7/requested_reviewers");
-      // @effect-diagnostics-next-line preferSchemaOverJson:off
       expect(JSON.parse(call.stdin ?? "")).toEqual({
         reviewers: ["octocat"],
         team_reviewers: [],
@@ -4216,7 +4171,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
       mockedExecute.mockReturnValue(
         Effect.succeed(
           output(
-            // @effect-diagnostics-next-line preferSchemaOverJson:off
             JSON.stringify({
               data: {
                 repository: {
@@ -4280,7 +4234,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
         "--input",
         "-",
       ]);
-      // @effect-diagnostics-next-line preferSchemaOverJson:off - asserting the raw gh request body.
       expect(JSON.parse(call.stdin ?? "")).toEqual({ labels: ["bug", "size:XL"] });
     }),
   );
@@ -4363,7 +4316,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
       mockedExecute.mockReturnValue(
         Effect.succeed(
           output(
-            // @effect-diagnostics-next-line preferSchemaOverJson:off
             JSON.stringify({
               data: {
                 repository: {
@@ -4399,7 +4351,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
       mockedExecute
         .mockReturnValueOnce(
           Effect.succeed(
-            // @effect-diagnostics-next-line preferSchemaOverJson:off
             output(JSON.stringify({ data: { repository: { pullRequest: { id: "PR_1" } } } })),
           ),
         )
@@ -4419,7 +4370,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
 
       // One request to learn the pull request's node id, one for every press together.
       assert.strictEqual(mockedExecute.mock.calls.length, 2);
-      // @effect-diagnostics-next-line preferSchemaOverJson:off
       const sent = JSON.parse(callAt(1).stdin ?? "") as {
         query: string;
         variables: Record<string, string>;
@@ -4455,7 +4405,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
       mockedExecute
         .mockReturnValueOnce(
           Effect.succeed(
-            // @effect-diagnostics-next-line preferSchemaOverJson:off
             output(JSON.stringify({ data: { repository: { pullRequest: { id: "PR_24" } } } })),
           ),
         )
@@ -4489,7 +4438,6 @@ layer("GitHubPullRequestCli.layer", (it) => {
         .mockReturnValueOnce(Effect.succeed(output('{"message":"not found"}')))
         .mockReturnValueOnce(
           Effect.succeed(
-            // @effect-diagnostics-next-line preferSchemaOverJson:off
             output(JSON.stringify({ data: { repository: { pullRequest: { id: "PR_25" } } } })),
           ),
         )
