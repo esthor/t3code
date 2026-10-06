@@ -12,6 +12,7 @@ import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 import * as Option from "effect/Option";
 import * as Schema from "effect/Schema";
+// @effect-diagnostics-next-line nodeBuiltinImport:off -- the stop wait polls against a performance.now() deadline, so it sleeps in real time.
 import * as NodeTimersPromises from "node:timers/promises";
 
 import * as ProjectionStore from "./ProjectionStore.ts";

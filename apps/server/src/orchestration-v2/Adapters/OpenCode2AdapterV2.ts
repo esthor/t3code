@@ -21,6 +21,7 @@
  *
  * @module orchestration-v2/Adapters/OpenCode2AdapterV2
  */
+// @effect-diagnostics-next-line nodeBuiltinImport:off -- uses Node's synchronous createHash; Effect's Crypto.digest is an Effect.
 import * as NodeCrypto from "node:crypto";
 
 import {
